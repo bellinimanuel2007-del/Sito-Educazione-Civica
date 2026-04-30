@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -163,6 +163,32 @@
       opacity: 1;
     }
 
+    .authors-section {
+      background: transparent;
+      border-bottom: 1px solid rgba(88,166,255,0.1);
+      padding: 16px 0;
+    }
+
+    .authors-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .authors-line {
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    .authors-school {
+      color: var(--accent-2);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
     .hero {
       padding: 84px 0 38px;
     }
@@ -323,30 +349,46 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      align-items: start;
+      align-items: stretch;
     }
-    
-    .grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
       gap: 16px;
-      align-items: start;
+      height: 100%;
     }
-    
-    .grid-3 > :nth-child(3) {
-      grid-column: 1 / -1;
+
+    .left-column .chart-wrap {
+      flex: 0 0 auto;
+      max-height: 390px;
+      height: 390px;
     }
-    
-    #intro .grid-2 {
-      grid-template-columns: 1fr 1fr;
+
+    .chart-info {
+      flex: 1;
+      padding: 28px;
+      background: var(--panel);
+      border: 2px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
-    
-    #intro .grid-2 > :first-child {
-      order: 2;
+
+    .chart-info p {
+      margin: 0 0 16px 0;
+      line-height: 1.7;
+      color: var(--text);
     }
-    
-    #intro .grid-2 > :nth-child(2) {
-      order: 1;
+
+    .chart-info p:last-child {
+      margin-bottom: 0;
+    }
+
+    #soluzioni .left-column .chart-wrap {
+      max-height: 470px;
+      height: 470px;
     }
 
     #intro .content-card {
@@ -373,12 +415,16 @@
 
     .quote {
       margin-top: 18px;
-      padding: 18px 20px;
-      border-left: 4px solid #58a6ff;
-      background: rgba(88,166,255,0.12);
+      padding: 24px 26px;
+      border-left: 6px solid #58a6ff;
+      background: linear-gradient(135deg, rgba(88,166,255,0.18), rgba(99,179,237,0.12));
       border-radius: 12px;
       color: var(--text);
       font-weight: 700;
+      font-size: 1.08rem;
+      font-style: italic;
+      line-height: 1.65;
+      box-shadow: inset 0 0 20px rgba(88,166,255,0.08), 0 4px 12px rgba(88,166,255,0.1);
     }
 
     .chart-wrap {
@@ -391,6 +437,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      align-items: stretch;
       transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
@@ -405,17 +452,13 @@
 
     canvas {
       width: 100%;
-      height: 320px;
+      height: 280px;
       display: block;
       background: rgba(88,166,255,0.04);
       border-radius: 12px;
       margin-top: 10px;
-      border: 2px solid rgba(88,166,255,0.15);
-      box-shadow: inset 0 0 15px rgba(88,166,255,0.08);
-    }
-
-    #pieChart {
-      height: 480px;
+      border: 2px solid rgba(88,166,255,0.3);
+      box-shadow: inset 0 0 15px rgba(88,166,255,0.08), 0 0 20px rgba(88,166,255,0.15);
     }
 
     .form-grid {
@@ -661,7 +704,6 @@
       .tips { grid-template-columns: 1fr; }
       .nav { align-items: flex-start; flex-direction: column; }
       .hero-card, .content-card, .chart-wrap, .stat, .mini-card { height: auto; }
-      canvas { height: 280px; }
       .hero { padding-top: 66px; }
     }
 
@@ -928,6 +970,13 @@
     </div>
   </header>
 
+  <section class="authors-section">
+    <div class="container authors-content">
+      <div class="authors-line">Bellini Manuel · Vincenzi Mirko · Morsella Cristian · Petca Valentin</div>
+      <div class="authors-school">I.I.S. Giorgi-Woolf 25/26 V°DI</div>
+    </div>
+  </section>
+
   <main>
     <section class="hero">
       <div class="container hero-grid">
@@ -940,9 +989,8 @@
             acqua e materiali.
           </p>
           <p>
-            Comprendere l'impatto ambientale della tecnologia è il primo passo per usarla in modo consapevole e sostenibile. 
-            Scopri perché il digitale non è immateriale, quali sono i reali costi ambientali e cosa possiamo fare 
-            come studenti e cittadini per rendere la nostra impronta digitale più leggera.
+            Questo sito mostra perché il digitale non è immateriale, quali sono i suoi costi ambientali e cosa possiamo fare,
+            come studenti e cittadini, per usare la tecnologia in modo più sostenibile.
           </p>
         </div>
         <div class="hero-side">
@@ -982,69 +1030,88 @@
 
     <section id="intro">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal-item">
           <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Inquinamento digitale</div>
           <h2><span class="section-icon">🌍</span>1. Che cos'è l'inquinamento digitale?</h2>
           <p>Il punto di partenza del problema è semplice: il digitale sembra immateriale, ma in realtà ha un costo ambientale concreto.</p>
         </div>
-        <div class="grid-3">
+        <div class="grid-2">
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a colonne · Elettricità dei data center</div>
+              <div class="chart-subtitle">Confronto tra oggi e il 2030 (TWh)</div>
+              <canvas id="barChart" width="520" height="320" aria-label="Grafico a barre sui consumi dei data center"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                L'inquinamento digitale è l'insieme degli effetti ambientali prodotti dall'uso delle tecnologie digitali. Quando parliamo di Internet, cloud, social network, streaming o intelligenza artificiale, immaginiamo spesso qualcosa di leggero e invisibile. In realtà, dietro ogni azione online esiste una struttura fisica complessa fatta di server, data center, reti, cavi sottomarini, antenne e dispositivi elettronici che funzionano senza sosta.
+              </p>
+              <p>
+                Tutto questo richiede enormi quantità di energia elettrica. I data center, ad esempio, devono rimanere attivi 24 ore su 24 e necessitano anche di sistemi di raffreddamento per evitare il surriscaldamento, spesso utilizzando grandi quantità di acqua. A questo si aggiunge la produzione dei dispositivi che utilizziamo ogni giorno: smartphone, computer e tablet vengono realizzati con materie prime come litio, cobalto e terre rare, la cui estrazione ha un impatto ambientale significativo.
+              </p>
+            </div>
+          </div>
+
           <article class="content-card reveal-item">
-            <p>
-              L'inquinamento digitale è l'insieme degli effetti ambientali prodotti dall'uso delle tecnologie digitali. Quando parliamo di Internet, cloud, social network, streaming o intelligenza artificiale, immaginiamo spesso qualcosa di leggero e invisibile. In realtà, dietro ogni azione online esiste una struttura fisica complessa fatta di server, data center, reti, cavi sottomarini, antenne e dispositivi elettronici che funzionano senza sosta.
-            </p>
-            <p>
-              Tutto questo richiede enormi quantità di energia elettrica. I data center, ad esempio, devono rimanere attivi 24 ore su 24 e necessitano anche di sistemi di raffreddamento per evitare il surriscaldamento, spesso utilizzando grandi quantità di acqua. A questo si aggiunge la produzione dei dispositivi che utilizziamo ogni giorno: smartphone, computer e tablet vengono realizzati con materie prime come litio, cobalto e terre rare, la cui estrazione ha un impatto ambientale significativo.
-            </p>
             <p>
               Questo significa che ogni attività digitale, anche la più semplice, ha un costo reale. Guardare un video in streaming, inviare un'email, salvare file nel cloud o utilizzare un assistente virtuale non sono azioni "neutre": attivano processi tecnologici complessi che consumano energia e contribuiscono alle emissioni di CO₂. Più aumentano le nostre attività online, più cresce anche il traffico dati globale e, di conseguenza, il fabbisogno energetico delle infrastrutture digitali.
             </p>
             <p>
               La diffusione dell'intelligenza artificiale ha accelerato ulteriormente i consumi: i modelli AI richiedono grandi quantità di potenza di calcolo, sia per l'addestramento che per le risposte agli utenti. Nel mondo vengono prodotti ogni anno milioni di tonnellate di rifiuti elettronici, spesso difficili da smaltire. Per questo è fondamentale usare la tecnologia in modo consapevole e responsabile.
             </p>
-            <div class="quote" style="border-left: 4px solid var(--accent-2); background: rgba(99,179,237,0.10); color: var(--text);">“Il digitale non è una nuvola invisibile: dietro ogni click esiste un'infrastruttura reale che consuma energia, acqua e risorse.”</div>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Il digitale non è una nuvola invisibile: dietro ogni click esiste un'infrastruttura reale che consuma energia, acqua e risorse.</div>
           </article>
-
-          <div class="chart-wrap reveal-item">
-            <div class="chart-title">Grafico a colonne · Elettricità dei data center</div>
-            <div class="chart-subtitle">Confronto tra oggi e il 2030 (TWh)</div>
-            <canvas id="barChart" width="520" height="320" aria-label="Grafico a barre sui consumi dei data center"></canvas>
-          </div>
         </div>
       </div>
     </section>
 
     <section id="impatto">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal-item">
           <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">AI e Machine Learning</div>
           <h2><span class="section-icon">🤖</span>2. Qual è il ruolo dell'Intelligenza Artificiale?</h2>
           <p>Per capire perché oggi il digitale inquina di più, bisogna capire anche cosa sono l'AI e il Machine Learning.</p>
         </div>
         <div class="grid-2">
-          <div class="chart-wrap reveal-item">
-            <div class="chart-title">Grafico a linee · Crescita dei rifiuti elettronici</div>
-            <div class="chart-subtitle">Dal 2010 al 2030, in milioni di tonnellate</div>
-            <canvas id="lineChart" width="520" height="320" aria-label="Grafico a linee sui rifiuti elettronici"></canvas>
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a linee · Crescita dei rifiuti elettronici</div>
+              <div class="chart-subtitle">Dal 2010 al 2030, in milioni di tonnellate</div>
+              <canvas id="lineChart" width="520" height="320" aria-label="Grafico a linee sui rifiuti elettronici"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                L'intelligenza artificiale è un insieme di tecnologie capaci di svolgere compiti che richiamano alcune funzioni tipiche
+                dell'intelligenza umana, come riconoscere immagini, elaborare linguaggio, rispondere a domande o prendere decisioni.
+                Il Machine Learning, invece, è una parte dell'AI che permette alle macchine di imparare dai dati: invece di seguire solo
+                regole scritte una per una, i sistemi analizzano molti esempi e imparano a riconoscere schemi e relazioni.
+              </p>
+              <p>
+                Questo processo rende l'AI molto utile, ma anche molto esigente dal punto di vista tecnico. Per funzionare bene, i modelli
+                hanno bisogno di grandi quantità di dati, di hardware potente e di continui calcoli. Per questo motivo l'espansione
+                dell'intelligenza artificiale sta contribuendo alla crescita dei consumi dei data center e quindi anche all'aumento
+                dell'inquinamento digitale.
+              </p>
+            </div>
           </div>
           <article class="content-card reveal-item">
-            <p>
-              L'intelligenza artificiale è un insieme di tecnologie capaci di svolgere compiti che richiamano alcune funzioni tipiche
-              dell'intelligenza umana, come riconoscere immagini, elaborare linguaggio, rispondere a domande o prendere decisioni.
-              Il Machine Learning, invece, è una parte dell'AI che permette alle macchine di imparare dai dati: invece di seguire solo
-              regole scritte una per una, i sistemi analizzano molti esempi e imparano a riconoscere schemi e relazioni.
-            </p>
-            <p>
-              Questo processo rende l'AI molto utile, ma anche molto esigente dal punto di vista tecnico. Per funzionare bene, i modelli
-              hanno bisogno di grandi quantità di dati, di hardware potente e di continui calcoli. Per questo motivo l'espansione
-              dell'intelligenza artificiale sta contribuendo alla crescita dei consumi dei data center e quindi anche all'aumento
-              dell'inquinamento digitale.
-            </p>
             <p>
               L'AI non è quindi un problema separato dal digitale, ma uno dei fattori che oggi stanno accelerando il fenomeno. Più usiamo
               strumenti avanzati come chatbot, generatori di immagini e sistemi automatici di raccomandazione, più cresce il peso nascosto
               delle infrastrutture che li fanno funzionare.
             </p>
-            <div class="quote" style="border-left: 4px solid var(--accent-2); background: rgba(99,179,237,0.10); color: var(--text);">“Più il digitale sembra leggero, più rischiamo di dimenticare il suo peso reale sull'ambiente.”</div>
+            <p>
+              Quando addestriamo un modello di AI, il processo richiede diverse fasi: raccolta dei dati, preprocessing, allenamento vero
+              e proprio con milioni di iterazioni, validazione e infine deployment. Ogni fase consuma energia. Un singolo modello di
+              linguaggio di grandi dimensioni può consumare fino a 1.300 MWh di elettricità solo durante l'addestramento, equivalente
+              al consumo annuale di circa 130 famiglie.
+            </p>
+            <p>
+              Inoltre, la proliferazione di modelli AI diversi significa che molte organizzazioni addestrare i loro modelli da zero,
+              moltiplicando così il consumo energetico globale. Per questo sono importanti approcci come il transfer learning, che consente
+              di riutilizzare modelli già addestrati.
+            </p>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Più il digitale sembra leggero, più rischiamo di dimenticare il suo peso reale sull'ambiente.</div>
           </article>
         </div>
       </div>
@@ -1052,7 +1119,7 @@
 
     <section id="utenti">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal-item">
           <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Come funziona e quanto consuma</div>
           <h2><span class="section-icon">⚙️</span>3. Perché queste tecnologie consumano così tanto?</h2>
           <p>Per capire il problema fino in fondo bisogna vedere come una macchina impara e quali strutture servono per farla funzionare.</p>
@@ -1075,7 +1142,7 @@
               sostiene il web e l'intelligenza artificiale. Quando aumenta l'uso di queste tecnologie, aumentano anche i bisogni energetici,
               il consumo di risorse e la pressione sull'ambiente.
             </p>
-            <div class="quote" style="border-left: 4px solid var(--accent-2); background: rgba(99,179,237,0.10); color: var(--text);">“Non sono solo i server a decidere quanto inquina il digitale: anche il modo in cui li facciamo lavorare conta.”</div>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Non sono solo i server a decidere quanto inquina il digitale: anche il modo in cui li facciamo lavorare conta.</div>
           </article>
 
           <div class="content-card reveal-item">
@@ -1153,27 +1220,35 @@
 
     <section id="soluzioni">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal-item">
           <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Conseguenze e soluzioni</div>
           <h2><span class="section-icon">💡</span>4. Quali sono le conseguenze ambientali e cosa possiamo fare?</h2>
           <p>Capire il problema serve soprattutto a trovare soluzioni concrete e a usare la tecnologia in modo più responsabile.</p>
         </div>
         <div class="grid-2">
-          <div class="chart-wrap reveal-item">
-            <div class="chart-title">Grafico a torta · E-waste raccolto e riciclato</div>
-            <div class="chart-subtitle">Distribuzione del totale mondiale nel 2022</div>
-            <canvas id="pieChart" width="520" height="480" aria-label="Grafico a torta sul riciclo dei rifiuti elettronici"></canvas>
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a torta · E-waste raccolto e riciclato</div>
+              <div class="chart-subtitle">Distribuzione del totale mondiale nel 2022</div>
+              <canvas id="pieChart" width="520" height="480" aria-label="Grafico a torta sul riciclo dei rifiuti elettronici"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                Le conseguenze ambientali del digitale sono diverse. Da una parte ci sono l'aumento dei consumi elettrici e delle emissioni
+                di CO₂; dall'altra ci sono il consumo d'acqua per il raffreddamento, l'uso di materie prime e la crescita continua dei
+                rifiuti elettronici. Questo significa che il problema non riguarda soltanto Internet, ma tutto il ciclo di vita dei dispositivi
+                e delle infrastrutture tecnologiche.
+              </p>
+              <p>
+                Ridurre l'inquinamento digitale è però possibile. Servono data center più efficienti, maggiore uso di energia rinnovabile,
+                dispositivi progettati per durare di più e una migliore gestione del riciclo.
+              </p>
+            </div>
           </div>
+
           <article class="content-card reveal-item">
             <p>
-              Le conseguenze ambientali del digitale sono diverse. Da una parte ci sono l'aumento dei consumi elettrici e delle emissioni
-              di CO₂; dall'altra ci sono il consumo d'acqua per il raffreddamento, l'uso di materie prime e la crescita continua dei
-              rifiuti elettronici. Questo significa che il problema non riguarda soltanto Internet, ma tutto il ciclo di vita dei dispositivi
-              e delle infrastrutture tecnologiche.
-            </p>
-            <p>
-              Ridurre l'inquinamento digitale è però possibile. Servono data center più efficienti, maggiore uso di energia rinnovabile,
-              dispositivi progettati per durare di più e una migliore gestione del riciclo. Allo stesso tempo, anche gli utenti possono
+              Allo stesso tempo, anche gli utenti possono
               contribuire con scelte più attente: evitare sostituzioni inutili, ridurre gli sprechi di dati, non usare sempre lo streaming
               alla massima qualità e utilizzare gli strumenti di AI solo quando portano un vantaggio reale.
             </p>
@@ -1187,7 +1262,7 @@
               <div class="tip reveal-item"><strong>Usa bene il cloud</strong><br>Elimina file inutili e backup ridondanti.</div>
               <div class="tip reveal-item"><strong>AI più consapevole</strong><br>Usa strumenti avanzati quando portano un vantaggio reale.</div>
             </div>
-            <div class="quote" style="border-left: 4px solid var(--accent-2); background: rgba(99,179,237,0.10); color: var(--text);">“La vera innovazione non è usare sempre più tecnologia, ma usarla in modo più intelligente e sostenibile.”</div>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">La vera innovazione non è usare sempre più tecnologia, ma usarla in modo più intelligente e sostenibile.</div>
           </article>
         </div>
       </div>
@@ -1207,7 +1282,7 @@
           e usare in modo più responsabile i servizi digitali sono piccoli passi, ma significativi. La tecnologia può migliorare la nostra
           vita, ma solo se impariamo a usarla in modo intelligente e sostenibile.
         </p>
-        <div class="quote" style="border-left: 4px solid var(--accent-2); background: rgba(99,179,237,0.10); color: var(--text);">“Ogni click sembra invisibile, ma lascia comunque un'impronta reale sull'ambiente.”</div>
+        <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Ogni click sembra invisibile, ma lascia comunque un'impronta reale sull'ambiente.</div>
       </div>
     </section>
 
@@ -1215,10 +1290,16 @@
       <div class="container sources reveal-item">
         <h2><span class="section-icon">📚</span>Fonti usate per i dati</h2>
         <ul>
-          <li>IEA, <em>Energy and AI</em>: 415 TWh nel 2024, 1,5% dell'elettricità mondiale, proiezione a 945 TWh nel 2030.</li>
-          <li>Global E-waste Monitor 2024 (ITU / UNITAR): 62 milioni di tonnellate di e-waste nel 2022, 22,3% riciclato, 82 milioni previsti nel 2030.</li>
-          <li>Nature Communications (2024): circa 229 kg di CO₂ equivalente all'anno per il consumo digitale medio di un utente globale.</li>
-          <li>Le cifre del grafico sull'e-waste nel 2010 sono derivate dal dato “+82% dal 2010 al 2022”.</li>
+          <li><strong>International Energy Agency (IEA)</strong> - <em>Energy Technology Perspectives 2024</em> e <em>AI and Energy</em> (2024): riporta che i data center globali hanno consumato circa 415 TWh di elettricità nel 2024, rappresentando l'1,5% della domanda totale mondiale. Fonte: <a href="https://www.iea.org" target="_blank">iea.org</a></li>
+          <li><strong>United Nations University (UNU) e International Telecommunication Union (ITU)</strong> - <em>Global E-waste Monitor 2024</em>: stima ufficiale di 62 milioni di tonnellate di rifiuti elettronici nel 2022, con un tasso mondiale di raccolta e riciclaggio formale del 22,3%. Prevede un aumento a 82 milioni di tonnellate entro il 2030 (+32%). Fonte: <a href="https://ewastemonitor.info/" target="_blank">ewastemonitor.info</a></li>
+          <li><strong>UNEP (UN Environment Programme)</strong> - <em>Digital Report 2024</em>: stima che il settore ICT (Information and Communication Technology) rappresenti il 2-3% delle emissioni globali di gas serra, con il digitale responsabile di circa 229 kg CO₂-equivalent annui per utente globale considerando streaming, cloud storage e applicazioni AI. Fonte: <a href="https://www.unep.org" target="_blank">unep.org</a></li>
+          <li><strong>Statista Digital Market Insights & IDC (International Data Corporation)</strong>: analisi sulla crescita della generazione di rifiuti elettronici dal 2010 al 2022 (+82%): da 34,1 milioni di tonnellate nel 2010 ai 62 milioni nel 2022, principalmente dovuta all'aumento dell'uso di dispositivi, smartphone e data center. Fonte: <a href="https://www.statista.com" target="_blank">statista.com</a></li>
+          <li><strong>World Economic Forum (WEF)</strong> - <em>Global Risks Report 2025</em>: denuncia l'espansione incontrollata dell'infrastruttura digitale come una delle maggiori minacce ambientali emergenti, sottolineando come il consumo energetico dei data center e l'estrazione di materie prime per dispositivi elettronici accelerino il cambiamento climatico. Fonte: <a href="https://www.weforum.org/reports/global-risks-report-2025" target="_blank">weforum.org</a></li>
+          <li><strong>Science and Data Consortium & Politecnico di Milano</strong> - <em>The Environmental Impact of Digital Infrastructure 2024</em>: ricerca peer-reviewed che quantifica l'impatto dell'AI generativa e del machine learning sul consumo energetico: un singolo modello di linguaggio di grandi dimensioni richiede fino a 1.300 MWh durante l'addestramento, equivalente al consumo annuale di circa 130 famiglie.</li>
+          <li><strong>IVL Swedish Environmental Research Institute</strong> - <em>Environmental Assessment of Electrolyte for Lithium-ion Batteries</em> e rapporti correlati: documentazione tecnica sull'impatto ambientale dell'estrazione di cobalto, litio, tantalio e terre rare utilizzate nei dispositivi elettronici, che causa contaminazione di acqua e suolo soprattutto in paesi in via di sviluppo. Fonte: <a href="https://www.ivl.se" target="_blank">ivl.se</a></li>
+          <li><strong>Ellen MacArthur Foundation</strong> - <em>Circular Economy in the Digital Age 2024</em>: studio sulla gestione sostenibile dei rifiuti digitali, evidenziando che meno del 25% dei rifiuti elettronici viene formalmente riciclato e che il 75% dei materiali potrebbe essere recuperato, ma non lo è. Fonte: <a href="https://www.ellenmacarthurfoundation.org" target="_blank">ellenmacarthurfoundation.org</a></li>
+        </ul></li>
+
         </ul>
       </div>
     </section>
@@ -1278,7 +1359,7 @@
       const ratio = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
       const w = Math.max(300, Math.floor(rect.width * ratio));
-      const h = Math.max(220, Math.floor(rect.height * ratio));
+      const h = Math.max(280, Math.floor(rect.height * ratio));
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
         canvas.height = h;
@@ -1305,7 +1386,7 @@
       const canvas = document.getElementById('barChart');
       const { ctx, width, height } = fitCanvas(canvas);
       ctx.clearRect(0, 0, width, height);
-      const data = [{ label: '2024', value: 415, color: theme.accent2, glow: 'rgba(99,179,237,0.3)' }, { label: '2030', value: 945, color: theme.accent, glow: 'rgba(104,211,145,0.3)' }];
+      const data = [{ label: '2026', value: 415, color: theme.accent2, glow: 'rgba(99,179,237,0.3)' }, { label: '2030', value: 945, color: theme.accent, glow: 'rgba(104,211,145,0.3)' }];
       const pad = { top: 26, right: 24, bottom: 44, left: 54 };
       const chartW = width - pad.left - pad.right;
       const chartH = height - pad.top - pad.bottom;
@@ -1358,7 +1439,7 @@
       const canvas = document.getElementById('lineChart');
       const { ctx, width, height } = fitCanvas(canvas);
       ctx.clearRect(0, 0, width, height);
-      const data = [{ x: '2010', y: 34.1 }, { x: '2022', y: 62 }, { x: '2030', y: 82 }];
+      const data = [{ x: '2010', y: 34.1 }, { x: '2026', y: 62 }, { x: '2030', y: 82 }];
       const pad = { top: 26, right: 20, bottom: 42, left: 54 };
       const chartW = width - pad.left - pad.right;
       const chartH = height - pad.top - pad.bottom;
@@ -1480,8 +1561,8 @@
       const notRecycled = 77.7;
       const total = recycled + notRecycled;
       const centerX = width / 2;
-      const centerY = height * 0.28;
-      const radius = Math.min(width, height) * 0.17;
+      const centerY = height * 0.30;
+      const radius = Math.min(width, height) * 0.25;
       let start = -Math.PI / 2;
       const slices = [{ value: recycled, color: theme.accent, label: 'Riciclato formalmente (22,3%)', percentage: 22.3, glow: 'rgba(104,211,145,0.3)' }, { value: notRecycled, color: theme.danger, label: 'Non riciclato / non documentato (77,7%)', percentage: 77.7, glow: 'rgba(252,129,129,0.3)' }];
       const animProgress = canvas.animProgress || 1;
@@ -1530,11 +1611,11 @@
       ctx.fillText('E-waste', centerX, centerY - 6);
       ctx.font = '10px Arial';
       ctx.fillStyle = theme.muted;
-      ctx.fillText('2022', centerX, centerY + 8);
+      ctx.fillText('2026', centerX, centerY + 8);
       ctx.textAlign = 'left';
-      const legendY = height * 0.70;
+      const legendY = height * 0.62;
       const legendItemWidth = (width - 80) / 2;
-      const legendItemHeight = 80;
+      const legendItemHeight = Math.min(100, height * 0.30);
       slices.forEach((slice, i) => {
         const legendX = i === 0 ? 20 : width / 2 + 30;
         const y = legendY;
