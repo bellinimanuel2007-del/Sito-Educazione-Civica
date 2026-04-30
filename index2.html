@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quanto può inquinare un click?</title>
+  <script>
+    window.scrollTo(0, 0);
+  </script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-2: #161b22;
+      --panel: rgba(22, 27, 34, 0.95);
+      --panel-2: rgba(13, 17, 23, 1);
+      --text: #e6edf3;
+      --muted: #c9d1d9;
+      --accent: #58a6ff;
+      --accent-2: #79c0ff;
+      --accent-3: #1f6feb;
+      --danger: #da3633;
+      --border: rgba(88,166,255,0.2);
+      --shadow: 0 12px 32px rgba(0,0,0,0.4);
+      --radius: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: 
+        radial-gradient(circle at 80% 20%, rgba(88,166,255,0.08), transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(31,110,235,0.06), transparent 35%),
+        linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0f172a 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .parallax-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .parallax-orb {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.06;
+      filter: blur(60px);
+    }
+
+    .parallax-orb-1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(88,166,255,0.3), transparent);
+      top: -150px;
+      left: -100px;
+    }
+
+    .parallax-orb-2 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(31,110,235,0.25), transparent);
+      bottom: -120px;
+      right: -80px;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 34px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(13,17,23,0.92), rgba(22,27,34,0.95));
+      border-bottom: 1px solid rgba(88,166,255,0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, #58a6ff 0%, #79c0ff 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(88,166,255,0.12), rgba(31,110,235,0.08));
+      border: 2px solid rgba(88,166,255,0.3);
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-links a::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(88,166,255,0.25), rgba(31,110,235,0.15));
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -100%;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #58a6ff, #79c0ff);
+      transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-links a:hover::after {
+      left: 0;
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      border-color: rgba(88,166,255,0.5);
+      background: linear-gradient(135deg, rgba(88,166,255,0.2), rgba(31,110,235,0.15));
+      box-shadow: 0 6px 18px rgba(88,166,255,0.2);
+    }
+
+    .nav-links a:hover::before {
+      opacity: 1;
+    }
+
+    .authors-section {
+      background: transparent;
+      border-bottom: 1px solid rgba(88,166,255,0.1);
+      padding: 16px 0;
+    }
+
+    .authors-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .authors-line {
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    .authors-school {
+      color: var(--accent-2);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .hero {
+      padding: 84px 0 38px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.28fr 0.92fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card, .panel {
+      background: linear-gradient(180deg, rgba(22,27,34,0.8), rgba(13,17,23,0.9));
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 38px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100%;
+      transition: all 0.35s ease;
+    }
+
+    .hero-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 45px rgba(88,166,255,0.15);
+      border-color: rgba(88,166,255,0.35);
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(88,166,255,0.08), transparent 45%);
+      pointer-events: none;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -90px;
+      bottom: -90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(31,110,235,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow { display: inline-block; padding: 7px 13px; border-radius: 999px; background: rgba(88,166,255,0.1); border: 1.5px solid rgba(88,166,255,0.3); color: var(--text); font-size: 0.9rem; margin-bottom: 16px; font-weight: 700; }
+    h1, h2, h3 { line-height: 1.16; margin: 0 0 14px; color: #e6edf3; }
+    h1 { font-size: clamp(2.3rem, 4.3vw, 3.9rem); font-weight: 900; }
+    h2 { font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 800; }
+    h3 { font-size: 1.3rem; font-weight: 800; }
+
+    p { margin: 0 0 14px; color: var(--muted); }
+
+    .lead {
+      font-size: 1.09rem;
+      color: #c9d1d9;
+      max-width: 95%;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .mini-card {
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(88,166,255,0.12), rgba(31,110,235,0.08));
+      border: 2px solid rgba(88,166,255,0.25);
+      border-radius: var(--radius);
+      min-height: 126px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.35s ease;
+    }
+
+    .mini-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(88,166,255,0.4);
+      box-shadow: 0 16px 40px rgba(88,166,255,0.18);
+      background: linear-gradient(180deg, rgba(88,166,255,0.18), rgba(31,110,235,0.12));
+    }
+
+    .big-number {
+      font-size: 2.55rem;
+      font-weight: 900;
+      color: #58a6ff;
+      margin-bottom: 6px;
+      letter-spacing: -0.03em;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 28px auto 8px;
+      justify-content: center;
+      max-width: 1040px;
+    }
+
+    .stat {
+      padding: 22px;
+      background: var(--panel);
+      border: 2px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: all 0.35s ease;
+      cursor: pointer;
+    }
+
+    .stat:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: rgba(88,166,255,0.35);
+      box-shadow: 0 18px 42px rgba(88,166,255,0.15);
+      background: rgba(22, 27, 34, 1);
+    }
+
+    .stat .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #58a6ff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    section {
+      padding: 34px 0;
+    }
+
+    .section-head {
+      margin-bottom: 20px;
+      max-width: 860px;
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(88,166,255,0.08);
+      border: 1.5px solid rgba(88,166,255,0.3);
+      color: var(--text);
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .left-column .chart-wrap {
+      flex: 0 0 auto;
+      max-height: 390px;
+      height: 390px;
+    }
+
+    .chart-info {
+      flex: 1;
+      padding: 28px;
+      background: var(--panel);
+      border: 2px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .chart-info p {
+      margin: 0 0 16px 0;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .chart-info p:last-child {
+      margin-bottom: 0;
+    }
+
+    #soluzioni .left-column .chart-wrap {
+      max-height: 470px;
+      height: 470px;
+    }
+
+    #intro .content-card {
+      padding: 20px;
+    }
+
+    .content-card {
+      padding: 28px;
+      background: var(--panel);
+      border: 2px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      height: 100%;
+      transition: all 0.35s ease;
+    }
+
+    .content-card:hover {
+      border-color: rgba(88,166,255,0.3);
+      box-shadow: 0 20px 45px rgba(88,166,255,0.12);
+      transform: translateY(-3px);
+    }
+
+    .content-card p:last-of-type { margin-bottom: 0; }
+
+    .quote {
+      margin-top: 18px;
+      padding: 24px 26px;
+      border-left: 6px solid #58a6ff;
+      background: linear-gradient(135deg, rgba(88,166,255,0.18), rgba(99,179,237,0.12));
+      border-radius: 12px;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.08rem;
+      font-style: italic;
+      line-height: 1.65;
+      box-shadow: inset 0 0 20px rgba(88,166,255,0.08), 0 4px 12px rgba(88,166,255,0.1);
+    }
+
+    .chart-wrap {
+      padding: 24px;
+      background: var(--panel-2);
+      border: 2px solid rgba(88,166,255,0.15);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .chart-wrap:hover {
+      border-color: rgba(88,166,255,0.3);
+      box-shadow: 0 22px 50px rgba(88,166,255,0.1);
+      transform: translateY(-6px) scale(1.01);
+      background: linear-gradient(135deg, rgba(13, 17, 23, 1), rgba(22, 27, 34, 1));
+    }
+
+    .chart-title, .chart-subtitle { display: none; }
+
+    canvas {
+      width: 100%;
+      height: 280px;
+      display: block;
+      background: rgba(88,166,255,0.04);
+      border-radius: 12px;
+      margin-top: 10px;
+      border: 2px solid rgba(88,166,255,0.3);
+      box-shadow: inset 0 0 15px rgba(88,166,255,0.08), 0 0 20px rgba(88,166,255,0.15);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #e6edf3;
+      font-size: 0.98rem;
+      letter-spacing: 0.3px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 2px solid rgba(88,166,255,0.25);
+      background: linear-gradient(135deg, rgba(22,27,34,0.9), rgba(13,17,23,0.95));
+      color: var(--text);
+      font: inherit;
+      outline: none;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(4px);
+    }
+
+    input:hover, select:hover, textarea:hover {
+      border-color: rgba(88,166,255,0.4);
+      background: linear-gradient(135deg, rgba(22,27,34,0.95), rgba(13,17,23,1));
+      box-shadow: 0 0 0 2px rgba(88,166,255,0.1);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(88,166,255,0.6);
+      background: linear-gradient(135deg, rgba(22,27,34,1), rgba(13,17,23,1));
+      box-shadow: 0 0 0 4px rgba(88,166,255,0.12), inset 0 1px 2px rgba(88,166,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    input[type="number"] {
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .form-field.number-input {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      position: relative;
+    }
+
+    .form-field.number-input input {
+      flex: 1;
+      border-radius: 10px;
+      margin: 0;
+      padding-right: 56px;
+    }
+
+    .number-buttons {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      gap: 2px;
+      pointer-events: auto;
+    }
+
+    .btn-number {
+      background: linear-gradient(135deg, rgba(88,166,255,0.3), rgba(31,110,235,0.2));
+      border: 1.5px solid rgba(88,166,255,0.35);
+      color: var(--accent);
+      width: 28px;
+      height: 22px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.9rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 5px;
+    }
+
+    .btn-number-minus {
+      border-radius: 5px 5px 2px 2px;
+    }
+
+    .btn-number-plus {
+      border-radius: 2px 2px 5px 5px;
+    }
+
+    .btn-number:hover {
+      background: linear-gradient(135deg, rgba(88,166,255,0.4), rgba(31,110,235,0.3));
+      border-color: rgba(88,166,255,0.5);
+      box-shadow: 0 0 12px rgba(88,166,255,0.25);
+      transform: scale(1.08);
+    }
+
+    .btn-number:active {
+      transform: scale(0.92);
+      background: linear-gradient(135deg, rgba(88,166,255,0.25), rgba(31,110,235,0.15));
+    }
+
+    .btn {
+      border: 0;
+      padding: 15px 24px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #58a6ff 0%, #79c0ff 100%);
+      color: #0d1117;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 24px rgba(88,166,255,0.25);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+      font-size: 1.02rem;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(88,166,255,0.35);
+      background: linear-gradient(135deg, #4a9aff 0%, #6eb5ff 100%);
+    }
+
+    .btn:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .btn:active {
+      transform: translateY(-1px) scale(1.00);
+    }
+
+    .result-box { display: none; margin-top: 24px; padding: 28px; border-radius: 12px; background: linear-gradient(135deg, rgba(88,166,255,0.12), rgba(31,110,235,0.08)); border: 2px solid rgba(88,166,255,0.3); box-shadow: inset 0 1px 2px rgba(88,166,255,0.1), 0 6px 20px rgba(88,166,255,0.1); }
+    .result-box.show { display: block; animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .result-score { font-size: 2.4rem; font-weight: 900; background: linear-gradient(135deg, #58a6ff, #79c0ff); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .result-box p { color: #c9d1d9; font-size: 0.98rem; line-height: 1.8; margin-bottom: 16px; }
+
+    .btn-share {
+      display: inline-block;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(88,166,255,0.9), rgba(31,110,235,0.85));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 16px rgba(88,166,255,0.25);
+      text-decoration: none;
+    }
+
+    .btn-share:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(88,166,255,0.35);
+      background: linear-gradient(135deg, #58a6ff, #79c0ff);
+    }
+
+    .btn-share:active {
+      transform: translateY(0px);
+    }
+
+    .tips {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+      align-items: stretch;
+    }
+
+    .tip {
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      border: 2px solid rgba(88,166,255,0.2);
+      background: rgba(22,27,34,0.7);
+      height: 100%;
+    }
+
+    .tip strong { color: #58a6ff; }
+
+    .sources {
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(22,27,34,0.8), rgba(13,17,23,0.9));
+      border: 2px solid rgba(88,166,255,0.2);
+      border-radius: var(--radius);
+      margin: 12px auto 52px;
+      max-width: 900px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .sources ul {
+      margin: 12px auto 0;
+      padding-left: 18px;
+      color: var(--muted);
+      text-align: left;
+      max-width: 700px;
+      line-height: 1.75;
+    }
+
+    footer {
+      padding: 26px 0 42px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.96rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .grid-2, .stats-grid { grid-template-columns: 1fr; }
+      .tips { grid-template-columns: 1fr; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .hero-card, .content-card, .chart-wrap, .stat, .mini-card { height: auto; }
+      .hero { padding-top: 66px; }
+    }
+
+    @keyframes revealFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes revealScale {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .reveal-item.revealed {
+      animation: revealFadeUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .reveal-item.scale {
+      transform: scale(0.92);
+    }
+
+    .reveal-item.scale.revealed {
+      animation: revealScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .nav-links a.active {
+      background: linear-gradient(135deg, rgba(255,165,0,0.3), rgba(255,107,107,0.2));
+      border-color: rgba(255,107,107,0.5);
+      color: #ff6b6b;
+      box-shadow: 0 0 12px rgba(255,100,60,0.2);
+    }
+
+    .nav-links a.active::after {
+      left: 0;
+    }
+
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 999;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #79c0ff, #58a6ff);
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(88,166,255,0.3);
+      transition: all 0.3s ease;
+      font-size: 20px;
+      color: #0d1117;
+      font-weight: 900;
+    }
+
+    #backToTop.show {
+      display: flex;
+      animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #backToTop:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(255,100,60,0.4);
+    }
+
+    #backToTop:active {
+      transform: translateY(-1px);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-field {
+      position: relative;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .form-field.valid input, .form-field.valid select { border-color: rgba(46,180,90,0.5); background: linear-gradient(135deg, rgba(46,180,90,0.12), rgba(46,180,90,0.06)); box-shadow: 0 0 0 1px rgba(46,180,90,0.15); }
+    .form-field.invalid input, .form-field.invalid select { border-color: rgba(255,0,0,0.5); background: linear-gradient(135deg, rgba(255,0,0,0.12), rgba(255,0,0,0.06)); box-shadow: 0 0 0 1px rgba(255,0,0,0.15); }
+
+    .form-field.valid::after { content: ""; position: absolute; bottom: -6px; left: 0; right: 0; height: 3px; background: #2eb45a; border-radius: 2px; box-shadow: 0 0 8px rgba(46,180,90,0.4); animation: lineIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .form-field.invalid::after { content: ""; position: absolute; bottom: -6px; left: 0; right: 0; height: 3px; background: #ff0000; border-radius: 2px; box-shadow: 0 0 8px rgba(255,0,0,0.4); animation: lineIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    @keyframes lineIn { from { width: 0; left: 50%; opacity: 0; } to { width: 100%; left: 0; opacity: 1; } }
+    .form-message { font-size: 0.82rem; margin-top: 6px; opacity: 0; transition: all 0.3s ease; height: 0; overflow: hidden; font-weight: 600; }
+    .form-field.invalid .form-message { color: #ff0000; opacity: 1; height: auto; }
+    .form-field.valid .form-message { color: #2eb45a; opacity: 0; height: 0; }
+
+    @keyframes confetti-fall { to { transform: translateY(100vh) rotateZ(360deg); opacity: 0; } }
+    .confetti { position: fixed; width: 10px; height: 10px; pointer-events: none; animation: confetti-fall 3s ease-in forwards; }
+
+    #scrollProgress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #58a6ff, #79c0ff, #1f6feb);
+      background-size: 200% 100%;
+      z-index: 1001;
+      width: 0%;
+      box-shadow: 0 0 10px rgba(88,166,255,0.6);
+      animation: progressGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes progressGlow { 0%, 100% { box-shadow: 0 0 10px rgba(88,166,255,0.6); } 50% { box-shadow: 0 0 16px rgba(121,192,255,0.8); } }
+
+    .section-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, rgba(88,166,255,0.2), rgba(31,110,235,0.15)); border: 2px solid rgba(88,166,255,0.3); margin-right: 12px; font-size: 1.3rem; flex-shrink: 0; }
+
+    h2 { display: flex; align-items: center; margin-bottom: 14px; }
+    .stat { position: relative; }
+    .stat::before { content: attr(data-icon); position: absolute; top: 16px; right: 16px; font-size: 1.5rem; opacity: 0.4; }
+
+    .tooltip-trigger { position: relative; cursor: help; display: inline-block; }
+    .tooltip-trigger:hover { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: rgba(88,166,255,0.5); }
+
+    .big-number-tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .big-number-tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      background: rgba(13,17,23,0.96);
+      color: #e6edf3;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 2px solid rgba(88,166,255,0.3);
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+
+    .big-number-tooltip::before {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid rgba(88,166,255,0.3);
+      bottom: 114%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+
+    .big-number-tooltip:hover::after,
+    .big-number-tooltip:hover::before {
+      opacity: 1;
+    }
+
+    @keyframes validPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(46,180,90,0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(46,180,90,0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(46,180,90,0);
+      }
+    }
+
+    .form-field.valid input,
+    .form-field.valid select {
+      animation: validPulse 0.4s ease-out;
+    }
+
+    .result-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 0.8s ease-in forwards;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    .mini-card::before {
+      content: attr(data-icon);
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 1.8rem;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .mini-card {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div id="scrollProgress"></div>
+  <div class="parallax-bg">
+    <div class="parallax-orb parallax-orb-1"></div>
+    <div class="parallax-orb parallax-orb-2"></div>
+  </div>
+  <header>
+    <div class="container nav">
+      <div class="brand">💻 QUANTO PUÒ INQUINARE UN CLICK?</div>
+      <nav class="nav-links">
+        <a href="#intro">Introduzione</a>
+        <a href="#impatto">Impatto</a>
+        <a href="#utenti">Test interattivo</a>
+        <a href="#soluzioni">Soluzioni</a>
+        <a href="#fonti">Fonti</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="authors-section">
+    <div class="container authors-content">
+      <div class="authors-line">Bellini Manuel · Vincenzi Mirko · Morsella Cristian · Petca Valentin</div>
+      <div class="authors-school">I.I.S. Giorgi-Woolf 25/26 V°DI</div>
+    </div>
+  </section>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-card reveal-item">
+          <div class="eyebrow" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text);">Educazione civica · Sito di progetto</div>
+          <h1>Quanto può inquinare un click?</h1>
+          <p class="lead">
+            Ogni azione online sembra immediata e invisibile, ma in realtà lascia una traccia concreta nel mondo fisico.
+            Un messaggio inviato, una ricerca, un video guardato o una richiesta all’intelligenza artificiale mettono in movimento
+            processi tecnologici complessi che spesso non vediamo, ma che hanno un impatto reale.
+          </p>
+          <p>
+            Il digitale non è soltanto comodità, velocità e innovazione: è anche responsabilità. Comprendere cosa si nasconde
+            dietro le nostre abitudini quotidiane permette di usare la tecnologia con maggiore consapevolezza, senza rinunciare
+            ai suoi vantaggi ma riducendo sprechi e comportamenti inutilmente pesanti per l’ambiente.
+         </p>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card reveal-item" data-icon="⚡">
+            <div class="big-number big-number-tooltip" data-tooltip="Equivalente a ~50 reattori nucleari">415 TWh</div>
+            <p>Consumo elettrico globale stimato dei data center nel 2024.</p>
+          </div>
+          <div class="mini-card reveal-item" data-icon="♻️" style="background: linear-gradient(180deg, rgba(246,173,85,0.14), rgba(246,173,85,0.05)); border-color: rgba(246,173,85,0.18);">
+            <div class="big-number big-number-tooltip" data-tooltip="Pari al peso di ~9.4 milioni di auto">62 Mt</div>
+            <p>Rifiuti elettronici prodotti nel mondo nel 2022.</p>
+          </div>
+          <div class="mini-card reveal-item" data-icon="📈" style="background: linear-gradient(180deg, rgba(252,129,129,0.16), rgba(252,129,129,0.05)); border-color: rgba(252,129,129,0.18);">
+            <div class="big-number big-number-tooltip" data-tooltip="+128% dal 2024">945 TWh</div>
+            <p>Consumo elettrico dei data center previsto per il 2030.</p>
+          </div>
+        </div>
+      </div>
+      <div class="container stats-grid">
+        <div class="stat reveal-item" data-icon="⚡">
+          <div class="value">1,5%</div>
+          <p>Quota dell'elettricità mondiale assorbita dai data center nel 2024.</p>
+        </div>
+        <div class="stat reveal-item" data-icon="💨">
+          <div class="value">229 kg</div>
+          <p>CO₂ equivalente annua collegata al consumo digitale medio di un utente globale.</p>
+        </div>
+        <div class="stat reveal-item" data-icon="✅">
+          <div class="value">22,3%</div>
+          <p>Quota di e-waste formalmente raccolta e riciclata nel 2022.</p>
+        </div>
+        <div class="stat reveal-item" data-icon="⚠️">
+          <div class="value">82 Mt</div>
+          <p>Rifiuti elettronici previsti nel 2030 se il trend continua.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="intro">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Inquinamento digitale</div>
+          <h2><span class="section-icon">🌍</span>1. Che cos'è l'inquinamento digitale?</h2>
+          <p>Il punto di partenza del problema è semplice: il digitale sembra immateriale, ma in realtà ha un costo ambientale concreto.</p>
+        </div>
+        <div class="grid-2">
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a colonne · Elettricità dei data center</div>
+              <div class="chart-subtitle">Confronto tra oggi e il 2030 (TWh)</div>
+              <canvas id="barChart" width="520" height="320" aria-label="Grafico a barre sui consumi dei data center"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                L'inquinamento digitale è l'insieme degli effetti ambientali prodotti dall'uso delle tecnologie digitali. Quando parliamo di Internet, cloud, social network, streaming o intelligenza artificiale, immaginiamo spesso qualcosa di leggero e invisibile. In realtà, dietro ogni azione online esiste una struttura fisica complessa fatta di server, data center, reti, cavi sottomarini, antenne e dispositivi elettronici che funzionano senza sosta.
+              </p>
+              <p>
+                Tutto questo richiede enormi quantità di energia elettrica. I data center, ad esempio, devono rimanere attivi 24 ore su 24 e necessitano anche di sistemi di raffreddamento per evitare il surriscaldamento, spesso utilizzando grandi quantità di acqua. A questo si aggiunge la produzione dei dispositivi che utilizziamo ogni giorno: smartphone, computer e tablet vengono realizzati con materie prime come litio, cobalto e terre rare, la cui estrazione ha un impatto ambientale significativo.
+              </p>
+            </div>
+          </div>
+
+          <article class="content-card reveal-item">
+            <p>
+              Questo significa che ogni attività digitale, anche la più semplice, ha un costo reale. Guardare un video in streaming, inviare un'email, salvare file nel cloud o utilizzare un assistente virtuale non sono azioni "neutre": attivano processi tecnologici complessi che consumano energia e contribuiscono alle emissioni di CO₂. Più aumentano le nostre attività online, più cresce anche il traffico dati globale e, di conseguenza, il fabbisogno energetico delle infrastrutture digitali.
+            </p>
+            <p>
+              La diffusione dell'intelligenza artificiale ha accelerato ulteriormente i consumi: i modelli AI richiedono grandi quantità di potenza di calcolo, sia per l'addestramento che per le risposte agli utenti. Nel mondo vengono prodotti ogni anno milioni di tonnellate di rifiuti elettronici, spesso difficili da smaltire. Per questo è fondamentale usare la tecnologia in modo consapevole e responsabile.
+            </p>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Il digitale non è una nuvola invisibile: dietro ogni click esiste un'infrastruttura reale che consuma energia, acqua e risorse.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="impatto">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">AI e Machine Learning</div>
+          <h2><span class="section-icon">🤖</span>2. Qual è il ruolo dell'Intelligenza Artificiale?</h2>
+          <p>Per capire perché oggi il digitale inquina di più, bisogna capire anche cosa sono l'AI e il Machine Learning.</p>
+        </div>
+        <div class="grid-2">
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a linee · Crescita dei rifiuti elettronici</div>
+              <div class="chart-subtitle">Dal 2010 al 2030, in milioni di tonnellate</div>
+              <canvas id="lineChart" width="520" height="320" aria-label="Grafico a linee sui rifiuti elettronici"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                L'intelligenza artificiale è un insieme di tecnologie capaci di svolgere compiti che richiamano alcune funzioni tipiche
+                dell'intelligenza umana, come riconoscere immagini, elaborare linguaggio, rispondere a domande o prendere decisioni.
+                Il Machine Learning, invece, è una parte dell'AI che permette alle macchine di imparare dai dati: invece di seguire solo
+                regole scritte una per una, i sistemi analizzano molti esempi e imparano a riconoscere schemi e relazioni.
+              </p>
+              <p>
+                Questo processo rende l'AI molto utile, ma anche molto esigente dal punto di vista tecnico. Per funzionare bene, i modelli
+                hanno bisogno di grandi quantità di dati, di hardware potente e di continui calcoli. Per questo motivo l'espansione
+                dell'intelligenza artificiale sta contribuendo alla crescita dei consumi dei data center e quindi anche all'aumento
+                dell'inquinamento digitale.
+              </p>
+            </div>
+          </div>
+          <article class="content-card reveal-item">
+            <p>
+              L'AI non è quindi un problema separato dal digitale, ma uno dei fattori che oggi stanno accelerando il fenomeno. Più usiamo
+              strumenti avanzati come chatbot, generatori di immagini e sistemi automatici di raccomandazione, più cresce il peso nascosto
+              delle infrastrutture che li fanno funzionare.
+            </p>
+            <p>
+              Quando addestriamo un modello di AI, il processo richiede diverse fasi: raccolta dei dati, preprocessing, allenamento vero
+              e proprio con milioni di iterazioni, validazione e infine deployment. Ogni fase consuma energia. Un singolo modello di
+              linguaggio di grandi dimensioni può consumare fino a 1.300 MWh di elettricità solo durante l'addestramento, equivalente
+              al consumo annuale di circa 130 famiglie.
+            </p>
+            <p>
+              Inoltre, la proliferazione di modelli AI diversi significa che molte organizzazioni addestrare i loro modelli da zero,
+              moltiplicando così il consumo energetico globale. Per questo sono importanti approcci come il transfer learning, che consente
+              di riutilizzare modelli già addestrati.
+            </p>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Più il digitale sembra leggero, più rischiamo di dimenticare il suo peso reale sull'ambiente.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="utenti">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Come funziona e quanto consuma</div>
+          <h2><span class="section-icon">⚙️</span>3. Perché queste tecnologie consumano così tanto?</h2>
+          <p>Per capire il problema fino in fondo bisogna vedere come una macchina impara e quali strutture servono per farla funzionare.</p>
+        </div>
+        <div class="grid-2">
+          <article class="content-card reveal-item">
+            <p>
+              Una macchina impara attraverso un processo di addestramento. Prima vengono raccolti molti dati, poi si sceglie un modello,
+              che viene allenato a riconoscere schemi, errori e relazioni. Nei sistemi più avanzati, come quelli basati su reti neurali e
+              deep learning, questo processo richiede una quantità enorme di operazioni matematiche, ripetute moltissime volte.
+            </p>
+            <p>
+              Tutto questo non avviene in modo astratto, ma dentro data center fisici che ospitano migliaia di server. Queste strutture
+              devono restare attive continuamente, elaborare informazioni in tempo reale e mantenere temperature controllate attraverso
+              sistemi di raffreddamento. Per questo i consumi non dipendono solo dai computer, ma anche dall'energia necessaria a far
+              funzionare e raffreddare l'intera infrastruttura.
+            </p>
+            <p>
+              Ecco perché l'inquinamento digitale non riguarda soltanto ciò che facciamo online, ma anche tutto il meccanismo invisibile che
+              sostiene il web e l'intelligenza artificiale. Quando aumenta l'uso di queste tecnologie, aumentano anche i bisogni energetici,
+              il consumo di risorse e la pressione sull'ambiente.
+            </p>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Non sono solo i server a decidere quanto inquina il digitale: anche il modo in cui li facciamo lavorare conta.</div>
+          </article>
+
+          <div class="content-card reveal-item">
+            <h3>Calcola una stima del tuo impatto digitale</h3>
+            <p>Inserisci i tuoi dati. Il risultato è indicativo e serve a riflettere sulle proprie abitudini digitali.</p>
+            <form class="form-grid" id="impactForm">
+              <div class="form-field">
+                <label for="nome">Nome</label>
+                <input id="nome" type="text" placeholder="Inserisci il tuo nome" />
+                <div class="form-message">Campo richiesto</div>
+              </div>
+              <div class="form-field">
+                <label for="prompt">Quante richieste fai all'AI in media al giorno?</label>
+                <div class="form-field number-input">
+                  <input id="prompt" type="number" min="0" value="5" />
+                  <div class="number-buttons">
+                    <button class="btn-number btn-number-plus" type="button" data-input="prompt">+</button>
+                    <button class="btn-number btn-number-minus" type="button" data-input="prompt">−</button>
+                  </div>
+                </div>
+                <div class="form-message">Valore valido</div>
+              </div>
+              <div class="form-field">
+                <label for="immagini">Quante immagini generi con l'AI a settimana?</label>
+                <div class="form-field number-input">
+                  <input id="immagini" type="number" min="0" value="2" />
+                  <div class="number-buttons">
+                    <button class="btn-number btn-number-plus" type="button" data-input="immagini">+</button>
+                    <button class="btn-number btn-number-minus" type="button" data-input="immagini">−</button>
+                  </div>
+                </div>
+                <div class="form-message">Valore valido</div>
+              </div>
+              <div class="form-field">
+                <label for="oreOnline">Quante ore a settimana passi tra streaming, cloud e servizi online intensivi?</label>
+                <div class="form-field number-input">
+                  <input id="oreOnline" type="number" min="0" value="10" />
+                  <div class="number-buttons">
+                    <button class="btn-number btn-number-plus" type="button" data-input="oreOnline">+</button>
+                    <button class="btn-number btn-number-minus" type="button" data-input="oreOnline">−</button>
+                  </div>
+                </div>
+                <div class="form-message">Valore valido</div>
+              </div>
+              <div class="form-field">
+                <label for="dispositivi">Ogni quanto cambi smartphone o altri dispositivi elettronici?</label>
+                <select id="dispositivi">
+                  <option value="8">Meno di 2 anni</option>
+                  <option value="5">Ogni 2-3 anni</option>
+                  <option value="2">Ogni 4-5 anni</option>
+                  <option value="0">Solo quando serve davvero</option>
+                </select>
+                <div class="form-message">Valore valido</div>
+              </div>
+              <button class="btn" type="submit">🔍 Calcola impatto</button>
+            </form>
+
+            <div class="result-box" id="resultBox">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 2rem;">✅</span>
+                <div>
+                  <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 4px;">Il tuo impatto digitale:</div>
+                  <div class="result-score" id="risultatoKg">0 kg CO₂e/anno</div>
+                </div>
+              </div>
+              <p id="risultatoTesto"></p>
+              <div style="margin-top: 16px; padding: 12px; border-radius: 8px; background: rgba(104,211,145,0.1); border-left: 3px solid #68d391;">
+                <strong style="color: #68d391;">💚 Suggerimento:</strong> Riduci l'uso di AI e streaming per diminuire il tuo impatto.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="soluzioni">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <div class="section-label" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Conseguenze e soluzioni</div>
+          <h2><span class="section-icon">💡</span>4. Quali sono le conseguenze ambientali e cosa possiamo fare?</h2>
+          <p>Capire il problema serve soprattutto a trovare soluzioni concrete e a usare la tecnologia in modo più responsabile.</p>
+        </div>
+        <div class="grid-2">
+          <div class="left-column">
+            <div class="chart-wrap reveal-item">
+              <div class="chart-title">Grafico a torta · E-waste raccolto e riciclato</div>
+              <div class="chart-subtitle">Distribuzione del totale mondiale nel 2022</div>
+              <canvas id="pieChart" width="520" height="480" aria-label="Grafico a torta sul riciclo dei rifiuti elettronici"></canvas>
+            </div>
+            <div class="chart-info reveal-item">
+              <p>
+                Le conseguenze ambientali del digitale sono diverse. Da una parte ci sono l'aumento dei consumi elettrici e delle emissioni
+                di CO₂; dall'altra ci sono il consumo d'acqua per il raffreddamento, l'uso di materie prime e la crescita continua dei
+                rifiuti elettronici. Questo significa che il problema non riguarda soltanto Internet, ma tutto il ciclo di vita dei dispositivi
+                e delle infrastrutture tecnologiche.
+              </p>
+              <p>
+                Ridurre l'inquinamento digitale è però possibile. Servono data center più efficienti, maggiore uso di energia rinnovabile,
+                dispositivi progettati per durare di più e una migliore gestione del riciclo.
+              </p>
+            </div>
+          </div>
+
+          <article class="content-card reveal-item">
+            <p>
+              Allo stesso tempo, anche gli utenti possono
+              contribuire con scelte più attente: evitare sostituzioni inutili, ridurre gli sprechi di dati, non usare sempre lo streaming
+              alla massima qualità e utilizzare gli strumenti di AI solo quando portano un vantaggio reale.
+            </p>
+            <p>
+              La vera sfida del futuro non sarà semplicemente avere più tecnologia, ma riuscire a farla crescere senza aumentare in modo
+              incontrollato il suo impatto ambientale. Per questo innovazione e sostenibilità devono andare insieme.
+            </p>
+            <div class="tips">
+              <div class="tip reveal-item"><strong>Riduci gli sprechi</strong><br>Evita streaming in HD quando non serve e spegni i dispositivi inutilizzati.</div>
+              <div class="tip reveal-item"><strong>Allunga la vita dei device</strong><br>Riparare o riutilizzare è spesso meglio che sostituire.</div>
+              <div class="tip reveal-item"><strong>Usa bene il cloud</strong><br>Elimina file inutili e backup ridondanti.</div>
+              <div class="tip reveal-item"><strong>AI più consapevole</strong><br>Usa strumenti avanzati quando portano un vantaggio reale.</div>
+            </div>
+            <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">La vera innovazione non è usare sempre più tecnologia, ma usarla in modo più intelligente e sostenibile.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container content-card reveal-item">
+        <h2><span class="section-icon">🎯</span>Conclusione</h2>
+        <p>
+          L'inquinamento digitale è un problema reale, attuale e spesso sottovalutato. Dietro ogni attività online esistono infrastrutture
+          che consumano elettricità, acqua e materiali, mentre la diffusione rapida dell'intelligenza artificiale sta accelerando ancora di
+          più questa crescita. Allo stesso tempo, l'aumento dei rifiuti elettronici dimostra che il peso ambientale del digitale non riguarda
+          solo ciò che facciamo su Internet, ma anche gli oggetti che usiamo ogni giorno.
+        </p>
+        <p>
+          Per questo è importante sviluppare una maggiore consapevolezza: informarsi, limitare gli sprechi, allungare la vita dei dispositivi
+          e usare in modo più responsabile i servizi digitali sono piccoli passi, ma significativi. La tecnologia può migliorare la nostra
+          vita, ma solo se impariamo a usarla in modo intelligente e sostenibile.
+        </p>
+        <div class="quote" style="border-left: 6px solid var(--accent-2); background: linear-gradient(135deg, rgba(99,179,237,0.18), rgba(99,179,237,0.12)); color: var(--text);">Ogni click sembra invisibile, ma lascia comunque un'impronta reale sull'ambiente.</div>
+      </div>
+    </section>
+
+    <section id="fonti">
+      <div class="container sources reveal-item">
+        <h2><span class="section-icon">📚</span>Fonti usate per i dati</h2>
+        <ul>
+          <li><strong>International Energy Agency (IEA)</strong> - <em>Energy Technology Perspectives 2024</em> e <em>AI and Energy</em> (2024): riporta che i data center globali hanno consumato circa 415 TWh di elettricità nel 2024, rappresentando l'1,5% della domanda totale mondiale. Fonte: <a href="https://www.iea.org" target="_blank">iea.org</a></li>
+          <li><strong>United Nations University (UNU) e International Telecommunication Union (ITU)</strong> - <em>Global E-waste Monitor 2024</em>: stima ufficiale di 62 milioni di tonnellate di rifiuti elettronici nel 2022, con un tasso mondiale di raccolta e riciclaggio formale del 22,3%. Prevede un aumento a 82 milioni di tonnellate entro il 2030 (+32%). Fonte: <a href="https://ewastemonitor.info/" target="_blank">ewastemonitor.info</a></li>
+          <li><strong>UNEP (UN Environment Programme)</strong> - <em>Digital Report 2024</em>: stima che il settore ICT (Information and Communication Technology) rappresenti il 2-3% delle emissioni globali di gas serra, con il digitale responsabile di circa 229 kg CO₂-equivalent annui per utente globale considerando streaming, cloud storage e applicazioni AI. Fonte: <a href="https://www.unep.org" target="_blank">unep.org</a></li>
+          <li><strong>Statista Digital Market Insights & IDC (International Data Corporation)</strong>: analisi sulla crescita della generazione di rifiuti elettronici dal 2010 al 2022 (+82%): da 34,1 milioni di tonnellate nel 2010 ai 62 milioni nel 2022, principalmente dovuta all'aumento dell'uso di dispositivi, smartphone e data center. Fonte: <a href="https://www.statista.com" target="_blank">statista.com</a></li>
+          <li><strong>World Economic Forum (WEF)</strong> - <em>Global Risks Report 2025</em>: denuncia l'espansione incontrollata dell'infrastruttura digitale come una delle maggiori minacce ambientali emergenti, sottolineando come il consumo energetico dei data center e l'estrazione di materie prime per dispositivi elettronici accelerino il cambiamento climatico. Fonte: <a href="https://www.weforum.org/reports/global-risks-report-2025" target="_blank">weforum.org</a></li>
+          <li><strong>Science and Data Consortium & Politecnico di Milano</strong> - <em>The Environmental Impact of Digital Infrastructure 2024</em>: ricerca peer-reviewed che quantifica l'impatto dell'AI generativa e del machine learning sul consumo energetico: un singolo modello di linguaggio di grandi dimensioni richiede fino a 1.300 MWh durante l'addestramento, equivalente al consumo annuale di circa 130 famiglie.</li>
+          <li><strong>IVL Swedish Environmental Research Institute</strong> - <em>Environmental Assessment of Electrolyte for Lithium-ion Batteries</em> e rapporti correlati: documentazione tecnica sull'impatto ambientale dell'estrazione di cobalto, litio, tantalio e terre rare utilizzate nei dispositivi elettronici, che causa contaminazione di acqua e suolo soprattutto in paesi in via di sviluppo. Fonte: <a href="https://www.ivl.se" target="_blank">ivl.se</a></li>
+          <li><strong>Ellen MacArthur Foundation</strong> - <em>Circular Economy in the Digital Age 2024</em>: studio sulla gestione sostenibile dei rifiuti digitali, evidenziando che meno del 25% dei rifiuti elettronici viene formalmente riciclato e che il 75% dei materiali potrebbe essere recuperato, ma non lo è. Fonte: <a href="https://www.ellenmacarthurfoundation.org" target="_blank">ellenmacarthurfoundation.org</a></li>
+        </ul></li>
+
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Progetto finale per l'Esame di Stato · Educazione civica · Inquinamento digitale e Intelligenza Artificiale
+  </footer>
+
+  <button id="backToTop" title="Torna all'inizio">↑</button>
+
+  <script>
+    const theme = {
+      text: '#eef2ff',
+      muted: '#d1dae0',
+      grid: 'rgba(255,255,255,0.08)',
+      accent: '#68d391',
+      accent2: '#63b3ed',
+      accent3: '#f6ad55',
+      danger: '#fc8181'
+    };
+
+    const tooltip = document.createElement('div');
+    tooltip.style.cssText = `
+      position: fixed;
+      background: rgba(19, 26, 46, 0.95);
+      color: #eef2ff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(147,197,253,0.3);
+      font-weight: 600;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: none;
+      white-space: nowrap;
+    `;
+    document.body.appendChild(tooltip);
+
+    function showTooltip(e, text) {
+      tooltip.textContent = text;
+      tooltip.style.display = 'block';
+      tooltip.style.opacity = '1';
+      tooltip.style.left = (e.pageX + 12) + 'px';
+      tooltip.style.top = (e.pageY - 32) + 'px';
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = '0';
+      setTimeout(() => { tooltip.style.display = 'none'; }, 200);
+    }
+
+    function fitCanvas(canvas) {
+      const ratio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(300, Math.floor(rect.width * ratio));
+      const h = Math.max(280, Math.floor(rect.height * ratio));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, width: rect.width, height: rect.height };
+    }
+    function roundRect(ctx, x, y, width, height, radius = 4) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function drawBarChart() {
+      const canvas = document.getElementById('barChart');
+      const { ctx, width, height } = fitCanvas(canvas);
+      ctx.clearRect(0, 0, width, height);
+      const data = [{ label: '2026', value: 415, color: theme.accent2, glow: 'rgba(99,179,237,0.3)' }, { label: '2030', value: 945, color: theme.accent, glow: 'rgba(104,211,145,0.3)' }];
+      const pad = { top: 26, right: 24, bottom: 44, left: 54 };
+      const chartW = width - pad.left - pad.right;
+      const chartH = height - pad.top - pad.bottom;
+      const max = 1000;
+      ctx.strokeStyle = theme.grid;
+      ctx.fillStyle = theme.muted;
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px Arial';
+      for (let i = 0; i <= 5; i++) {
+        const y = pad.top + chartH - (chartH / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + chartW, y);
+        ctx.stroke();
+        ctx.fillText(String(i * 200), 10, y + 4);
+      }
+      const barWidth = 90;
+      const gap = (chartW - barWidth * data.length) / (data.length + 1);
+      canvas.barRects = [];
+      const animProgress = canvas.animProgress || 1;
+      
+      data.forEach((d, i) => {
+        const x = pad.left + gap + i * (barWidth + gap);
+        const fullH = (d.value / max) * chartH;
+        const h = fullH * animProgress;
+        const y = pad.top + chartH - h;
+        const gradient = ctx.createLinearGradient(x, y, x, y + h);
+        gradient.addColorStop(0, d.color);
+        gradient.addColorStop(1, d.color + '66');
+        ctx.shadowColor = d.glow;
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 2;
+        ctx.fillStyle = gradient;
+        roundRect(ctx, x, y, barWidth, h, 6);
+        ctx.fill();
+        ctx.shadowColor = 'transparent';
+
+        canvas.barRects.push({ x, y, width: barWidth, height: h, value: d.value, label: d.label });
+        ctx.fillStyle = theme.text;
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText(d.value + ' TWh', x + 10, y - 14);
+        ctx.fillStyle = theme.muted;
+        ctx.font = 'bold 14px Arial';
+        ctx.fillText(d.label, x + 28, height - 12);
+      });
+    }
+
+    function drawLineChart() {
+      const canvas = document.getElementById('lineChart');
+      const { ctx, width, height } = fitCanvas(canvas);
+      ctx.clearRect(0, 0, width, height);
+      const data = [{ x: '2010', y: 34.1 }, { x: '2026', y: 62 }, { x: '2030', y: 82 }];
+      const pad = { top: 26, right: 20, bottom: 42, left: 54 };
+      const chartW = width - pad.left - pad.right;
+      const chartH = height - pad.top - pad.bottom;
+      const max = 90;
+      ctx.strokeStyle = theme.grid;
+      ctx.fillStyle = theme.muted;
+      ctx.lineWidth = 1;
+      ctx.font = 'bold 13px Arial';
+      for (let i = 0; i <= 5; i++) {
+        const y = pad.top + chartH - (chartH / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + chartW, y);
+        ctx.stroke();
+        ctx.fillText(String(i * 18), 16, y + 4);
+      }
+      const step = chartW / (data.length - 1);
+      const points = data.map((d, i) => ({ x: pad.left + i * step, y: pad.top + chartH - (d.y / max) * chartH, label: d.x, value: d.y }));
+      const animProgress = canvas.animProgress || 1;
+      const visiblePoints = Math.ceil(points.length * animProgress);
+      const isAnimating = animProgress < 1;
+
+      let partialPoint = null;
+      if (isAnimating && visiblePoints < points.length) {
+        const lastComplete = visiblePoints - 1;
+        const nextPoint = visiblePoints;
+        if (lastComplete >= 0 && nextPoint < points.length) {
+          const lastP = points[lastComplete];
+          const nextP = points[nextPoint];
+          const partialProgress = (animProgress * points.length) % 1;
+          const partialX = lastP.x + (nextP.x - lastP.x) * partialProgress;
+          const partialY = lastP.y + (nextP.y - lastP.y) * partialProgress;
+          partialPoint = { x: partialX, y: partialY };
+        }
+      }
+
+      if (visiblePoints > 1 || (partialPoint && visiblePoints > 0)) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < visiblePoints; i++) {
+          const p1 = points[i - 1];
+          const p2 = points[i];
+          if (!isAnimating && i > 1) {
+            const cp = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+            ctx.quadraticCurveTo(cp.x, cp.y, p2.x, p2.y);
+          } else {
+            ctx.lineTo(p2.x, p2.y);
+          }
+        }
+        if (partialPoint) {
+          ctx.lineTo(partialPoint.x, partialPoint.y);
+          ctx.lineTo(partialPoint.x, pad.top + chartH);
+        } else { ctx.lineTo(points[visiblePoints - 1].x, pad.top + chartH); }
+        ctx.lineTo(points[0].x, pad.top + chartH);
+        const fillGradient = ctx.createLinearGradient(0, points[0].y, 0, pad.top + chartH);
+        fillGradient.addColorStop(0, 'rgba(246,173,85,0.2)');
+        fillGradient.addColorStop(1, 'rgba(246,173,85,0.02)');
+        ctx.fillStyle = fillGradient;
+        ctx.fill();
+      }
+
+      ctx.shadowColor = 'rgba(246,173,85,0.4)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 3;
+      ctx.strokeStyle = theme.accent3;
+      ctx.lineWidth = 4;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < visiblePoints; i++) {
+        const p1 = points[i - 1];
+        const p2 = points[i];
+        if (!isAnimating && i > 1) {
+          const cp = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+          ctx.quadraticCurveTo(cp.x, cp.y, p2.x, p2.y);
+        } else {
+          ctx.lineTo(p2.x, p2.y);
+        }
+      }
+      if (partialPoint) ctx.lineTo(partialPoint.x, partialPoint.y);
+      ctx.stroke();
+      ctx.shadowColor = 'transparent';
+      if (!isAnimating) {
+        canvas.smoothLine = { points, pad, chartH, max, data };
+      }
+      canvas.linePoints = [];
+      points.forEach((p, idx) => {
+        if (idx < visiblePoints) {
+          ctx.shadowColor = 'rgba(246,173,85,0.5)';
+          ctx.shadowBlur = 10;
+          ctx.fillStyle = '#0b1020';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = theme.accent3;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowColor = 'transparent';
+
+          canvas.linePoints.push({ x: p.x, y: p.y, radius: 5, value: p.value, label: p.label });
+          ctx.fillStyle = theme.text;
+          ctx.font = 'bold 14px Arial';
+          ctx.fillText(String(p.value) + ' Mt', p.x - 22, p.y - 16);
+          ctx.fillStyle = theme.muted;
+          ctx.font = 'bold 13px Arial';
+          ctx.fillText(p.label, p.x - 12, height - 12);
+        }
+      });
+    }
+
+    function drawPieChart() {
+      const canvas = document.getElementById('pieChart');
+      const { ctx, width, height } = fitCanvas(canvas);
+      ctx.clearRect(0, 0, width, height);
+      const recycled = 22.3;
+      const notRecycled = 77.7;
+      const total = recycled + notRecycled;
+      const centerX = width / 2;
+      const centerY = height * 0.30;
+      const radius = Math.min(width, height) * 0.25;
+      let start = -Math.PI / 2;
+      const slices = [{ value: recycled, color: theme.accent, label: 'Riciclato formalmente (22,3%)', percentage: 22.3, glow: 'rgba(104,211,145,0.3)' }, { value: notRecycled, color: theme.danger, label: 'Non riciclato / non documentato (77,7%)', percentage: 77.7, glow: 'rgba(252,129,129,0.3)' }];
+      const animProgress = canvas.animProgress || 1;
+      const totalAngle = Math.PI * 2 * animProgress;
+
+      canvas.pieSlices = [];
+      let currentAngle = start;
+      ctx.shadowColor = 'rgba(0,0,0,0.3)';
+      ctx.shadowBlur = 20;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 4;
+      slices.forEach(slice => {
+        const fullAngle = (slice.value / total) * Math.PI * 2;
+        const displayAngle = Math.min(fullAngle, Math.max(0, totalAngle - (currentAngle - start)));
+        if (displayAngle > 0) {
+          const sliceStart = currentAngle;
+          canvas.pieSlices.push({ startAngle: sliceStart, angle: displayAngle, centerX, centerY, radius, label: slice.label, percentage: slice.percentage });
+          const grad = ctx.createRadialGradient(centerX - radius * 0.3, centerY - radius * 0.3, 0, centerX, centerY, radius);
+          grad.addColorStop(0, slice.color + '99');
+          grad.addColorStop(1, slice.color);
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + displayAngle);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        currentAngle += fullAngle;
+      });
+      ctx.shadowColor = 'transparent';
+      ctx.fillStyle = '#0b1020';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 0.52, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 0.52, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = theme.accent2;
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('E-waste', centerX, centerY - 6);
+      ctx.font = '10px Arial';
+      ctx.fillStyle = theme.muted;
+      ctx.fillText('2026', centerX, centerY + 8);
+      ctx.textAlign = 'left';
+      const legendY = height * 0.62;
+      const legendItemWidth = (width - 80) / 2;
+      const legendItemHeight = Math.min(100, height * 0.30);
+      slices.forEach((slice, i) => {
+        const legendX = i === 0 ? 20 : width / 2 + 30;
+        const y = legendY;
+        const itemWidth = legendItemWidth;
+        const boxGradient = ctx.createLinearGradient(legendX - 8, y - 8, legendX - 8, y + legendItemHeight);
+        boxGradient.addColorStop(0, 'rgba(255,255,255,0.10)');
+        boxGradient.addColorStop(1, 'rgba(255,255,255,0.03)');
+        ctx.fillStyle = boxGradient;
+        roundRect(ctx, legendX - 8, y - 8, itemWidth + 16, legendItemHeight, 12);
+        ctx.fill();
+        const borderColor = slice.color === theme.accent ? '104,211,145' : '252,129,129';
+        ctx.strokeStyle = 'rgba(' + borderColor + ',0.30)';
+        ctx.lineWidth = 2;
+        roundRect(ctx, legendX - 8, y - 8, itemWidth + 16, legendItemHeight, 12);
+        ctx.stroke();
+        ctx.shadowColor = slice.color + '44';
+        ctx.shadowBlur = 16;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+        const colorGrad = ctx.createLinearGradient(legendX + 10, y + 10, legendX + 40, y + 40);
+        colorGrad.addColorStop(0, slice.color + 'dd');
+        colorGrad.addColorStop(1, slice.color + '99');
+        ctx.fillStyle = colorGrad;
+        roundRect(ctx, legendX + 10, y + 10, 30, 30, 6);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 2;
+        roundRect(ctx, legendX + 10, y + 10, 30, 30, 6);
+        ctx.stroke();
+        ctx.shadowColor = 'transparent';
+        const icon = slice.color === theme.accent ? '+' : '!';
+        ctx.fillStyle = slice.color;
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText(icon, legendX + 16, y + 37);
+        ctx.fillStyle = theme.text;
+        ctx.font = 'bold 13px Arial';
+        ctx.fillText(slice.percentage === 22.3 ? 'Riciclato' : 'Non riciclato', legendX + 45, y + 18);
+        ctx.fillStyle = slice.color;
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText(slice.percentage.toFixed(1) + '%', legendX + 45, y + 38);
+        ctx.fillStyle = theme.muted;
+        ctx.font = '9px Arial';
+        const desc = slice.percentage === 22.3 ? 'Formalmente riciclato' : 'Non tracciato';
+        ctx.fillText(desc, legendX + 45, y + 55);
+      });
+    }
+
+    function calcolaImpatto() {
+      const nome = document.getElementById('nome').value.trim();
+      const prompt = Number(document.getElementById('prompt').value || 0);
+      const immagini = Number(document.getElementById('immagini').value || 0);
+      const oreOnline = Number(document.getElementById('oreOnline').value || 0);
+      const dispositivi = Number(document.getElementById('dispositivi').value || 0);
+
+      const co2Prompt = prompt * 365 * 3;
+      const co2Immagini = immagini * 52 * 35;
+      const co2Online = oreOnline * 52 * 50;
+      const bonusDevice = dispositivi * 1000;
+      const totaleKg = (co2Prompt + co2Immagini + co2Online + bonusDevice) / 1000;
+
+      let livello = 'basso';
+      if (totaleKg >= 35) livello = 'alto';
+      else if (totaleKg >= 18) livello = 'medio';
+
+      const labelNome = nome ? nome + ', ' : '';
+      document.getElementById('resultBox').classList.add('show');
+      document.getElementById('risultatoKg').textContent = totaleKg.toFixed(1) + ' kg CO₂e/anno';
+      document.getElementById('risultatoTesto').textContent = labelNome + 'la tua impronta digitale stimata è di livello ' + livello + '. Questa è una stima didattica: serve a mostrare che l’uso dell’AI, dello streaming e il ricambio frequente dei dispositivi possono aumentare l’impatto ambientale.';
+    }
+
+    function redrawAll() {
+      drawBarChart();
+      drawLineChart();
+      drawPieChart();
+    }
+
+    function animateChartOnIntersection(canvasId, duration = 1000) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !canvas.animating) {
+            canvas.animating = true;
+            canvas.animProgress = 0;
+            const startTime = Date.now();
+
+            const animate = () => {
+              const elapsed = Date.now() - startTime;
+              canvas.animProgress = Math.min(elapsed / duration, 1);
+
+              // Usa easing per animazione più fluida
+              const easeProgress = canvas.animProgress * (2 - canvas.animProgress);
+              canvas.animProgress = easeProgress;
+
+              redrawAll();
+
+              if (canvas.animProgress < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                observer.unobserve(canvas);
+              }
+            };
+
+            animate();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(canvas);
+    }
+
+    animateChartOnIntersection('barChart', 1000);
+    animateChartOnIntersection('lineChart', 1200);
+    animateChartOnIntersection('pieChart', 1400);
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 150) current = section.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+    function animateCounter(element, target, suffix = '', duration = 800) {
+      const startTime = Date.now();
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeProgress = progress * (2 - progress);
+        const current = Math.floor(startValue + (target - startValue) * easeProgress);
+        element.textContent = current.toLocaleString('it-IT') + suffix;
+        if (progress < 1) requestAnimationFrame(animate);
+        else element.textContent = target.toLocaleString('it-IT') + suffix;
+      };
+      animate();
+    }
+    const startValue = 0;
+    const statValues = document.querySelectorAll('.stat .value');
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.dataset.animated = 'true';
+          const text = entry.target.textContent;
+          if (text.includes('%')) animateCounter(entry.target, parseFloat(text), '%', 800);
+          else if (text.includes('kg')) animateCounter(entry.target, parseInt(text), ' kg', 800);
+          else if (text.includes('Mt')) animateCounter(entry.target, parseInt(text), ' Mt', 800);
+          else if (text.includes('TWh')) animateCounter(entry.target, parseInt(text), ' TWh', 800);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    statValues.forEach(stat => statObserver.observe(stat));
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) backToTopBtn.classList.add('show');
+      else backToTopBtn.classList.remove('show');
+    });
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    const formFields = document.querySelectorAll('.form-field');
+    function validateField(field) {
+      const input = field.querySelector('input, select');
+      if (!input) return false;
+      let isValid = true;
+      if (input.type === 'text') isValid = input.value.trim() !== '';
+      else if (input.type === 'number') isValid = input.value.trim() !== '' && parseInt(input.value) >= 0;
+      else if (input.tagName === 'SELECT') isValid = input.value !== '';
+      if (!isValid) {
+        field.classList.remove('valid');
+        field.classList.add('invalid');
+      } else {
+        field.classList.remove('invalid');
+        field.classList.add('valid');
+      }
+      return isValid;
+    }
+
+    formFields.forEach(field => {
+      const input = field.querySelector('input, select');
+      if (input) {
+        input.addEventListener('input', () => validateField(field));
+        input.addEventListener('change', () => validateField(field));
+        input.addEventListener('blur', () => validateField(field));
+      }
+    });
+    function createConfetti() {
+      const colors = ['#7dd3fc', '#93c5fd', '#68d391', '#f6ad55', '#fc8181'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = (Math.random() * 8 + 4) + 'px';
+        confetti.style.height = confetti.style.width;
+        confetti.style.top = '-10px';
+        confetti.style.delay = Math.random() * 0.3 + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3300);
+      }
+    }
+    const impactForm = document.getElementById('impactForm');
+    impactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let allValid = true;
+      formFields.forEach(field => {
+        if (!validateField(field)) allValid = false;
+      });
+      if (allValid) {
+        calcolaImpatto();
+        createConfetti();
+      }
+    });
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -100px 0px' });
+    document.querySelectorAll('.reveal-item').forEach(el => revealObserver.observe(el));
+    document.getElementById('barChart').addEventListener('mousemove', (e) => {
+      const canvas = e.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      let found = false;
+      if (canvas.barRects) {
+        canvas.barRects.forEach(bar => {
+          if (x >= bar.x && x <= bar.x + bar.width && y >= bar.y && y <= bar.y + bar.height) {
+            showTooltip(e, bar.label + ': ' + bar.value + ' TWh');
+            canvas.style.cursor = 'pointer';
+            found = true;
+          }
+        });
+      }
+      canvas.style.cursor = found ? 'pointer' : 'default';
+      if (!found) hideTooltip();
+    });
+    document.getElementById('barChart').addEventListener('mouseleave', hideTooltip);
+
+    document.getElementById('lineChart').addEventListener('mousemove', (e) => {
+      const canvas = e.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      let found = false;
+      if (canvas.linePoints) {
+        canvas.linePoints.forEach(point => {
+          const dist = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+          if (dist <= point.radius + 8) {
+            showTooltip(e, point.label + ': ' + point.value + ' Mt');
+            canvas.style.cursor = 'pointer';
+            found = true;
+          }
+        });
+      }
+      if (!found && canvas.smoothLine) {
+        const line = canvas.smoothLine;
+        const visiblePoints = line.points.length;
+        if (visiblePoints > 1) {
+          for (let i = 0; i < visiblePoints - 1; i++) {
+            const p1 = line.points[i];
+            const p2 = line.points[i + 1];
+            const dist = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
+            if (dist < 12) {
+              const t = (x - p1.x) / (p2.x - p1.x);
+              const interpolatedY = p1.value + (p2.value - p1.value) * t;
+              const xRange = line.data[i + 1].x - line.data[i].x;
+              const xInternal = line.data[i].x + (xRange * t);
+              showTooltip(e, xInternal.toFixed(0) + ': ' + interpolatedY.toFixed(1) + ' Mt');
+              canvas.style.cursor = 'pointer';
+              found = true;
+              break;
+            }
+          }
+        }
+      }
+      canvas.style.cursor = found ? 'pointer' : 'default';
+      if (!found) hideTooltip();
+    });
+
+    // Funzione per calcolare la distanza di un punto da un segmento di linea
+    function distanceToLineSegment(px, py, x1, y1, x2, y2) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const lengthSq = dx * dx + dy * dy;
+      
+      if (lengthSq === 0) return Math.sqrt((px - x1) ** 2 + (py - y1) ** 2);
+      
+      let t = ((px - x1) * dx + (py - y1) * dy) / lengthSq;
+      t = Math.max(0, Math.min(1, t));
+      
+      const nearX = x1 + t * dx;
+      const nearY = y1 + t * dy;
+      
+      return Math.sqrt((px - nearX) ** 2 + (py - nearY) ** 2);
+    }
+
+    document.getElementById('lineChart').addEventListener('mouseleave', hideTooltip);
+    document.getElementById('pieChart').addEventListener('mousemove', (e) => {
+      const canvas = e.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      let found = false;
+      if (canvas.pieSlices) {
+        canvas.pieSlices.forEach(slice => {
+          const dx = x - slice.centerX;
+          const dy = y - slice.centerY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const angle = Math.atan2(dy, dx);
+          if (dist <= slice.radius && dist >= slice.radius * 0.52) {
+            const normalizedAngle = (angle - slice.startAngle + Math.PI * 2) % (Math.PI * 2);
+            if (normalizedAngle >= 0 && normalizedAngle <= slice.angle) {
+              showTooltip(e, slice.label + ' (' + slice.percentage.toFixed(1) + '%)');
+              canvas.style.cursor = 'pointer';
+              found = true;
+            }
+          }
+        });
+      }
+      canvas.style.cursor = found ? 'pointer' : 'default';
+      if (!found) hideTooltip();
+    });
+    document.getElementById('pieChart').addEventListener('mouseleave', hideTooltip);
+    window.addEventListener('resize', redrawAll);
+    redrawAll();
+    document.querySelectorAll('.btn-number').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const input = document.getElementById(btn.getAttribute('data-input'));
+        const val = Number(input.value) || 0;
+        input.value = btn.classList.contains('btn-number-plus') ? val + 1 : Math.max(0, val - 1);
+        validateField(input);
+      });
+    });
+    const parallaxBg = document.querySelector('.parallax-bg');
+    const parallaxOrbs = document.querySelectorAll('.parallax-orb');
+    if (parallaxBg && parallaxOrbs.length > 0) {
+      window.addEventListener('scroll', () => {
+        parallaxOrbs.forEach((orb, i) => {
+          const speed = 0.3 + (i * 0.1);
+          orb.style.transform = `translateY(${window.scrollY * speed}px)`;
+        });
+      });
+      parallaxBg.addEventListener('mousemove', (e) => {
+        const rect = parallaxBg.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        parallaxOrbs.forEach((orb, i) => {
+          const moveX = (x - rect.width / 2) * (0.02 + i * 0.01);
+          const moveY = (y - rect.height / 2) * (0.02 + i * 0.01);
+          orb.style.transform += ` translate(${moveX}px, ${moveY}px)`;
+        });
+      });
+    }
+  </script>
+</body></html>
