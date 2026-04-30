@@ -1299,15 +1299,13 @@
           <li><strong>Science and Data Consortium & Politecnico di Milano</strong> - <em>The Environmental Impact of Digital Infrastructure 2024</em>: ricerca peer-reviewed che quantifica l'impatto dell'AI generativa e del machine learning sul consumo energetico: un singolo modello di linguaggio di grandi dimensioni richiede fino a 1.300 MWh durante l'addestramento, equivalente al consumo annuale di circa 130 famiglie.</li>
           <li><strong>IVL Swedish Environmental Research Institute</strong> - <em>Environmental Assessment of Electrolyte for Lithium-ion Batteries</em> e rapporti correlati: documentazione tecnica sull'impatto ambientale dell'estrazione di cobalto, litio, tantalio e terre rare utilizzate nei dispositivi elettronici, che causa contaminazione di acqua e suolo soprattutto in paesi in via di sviluppo. Fonte: <a href="https://www.ivl.se" target="_blank">ivl.se</a></li>
           <li><strong>Ellen MacArthur Foundation</strong> - <em>Circular Economy in the Digital Age 2024</em>: studio sulla gestione sostenibile dei rifiuti digitali, evidenziando che meno del 25% dei rifiuti elettronici viene formalmente riciclato e che il 75% dei materiali potrebbe essere recuperato, ma non lo è. Fonte: <a href="https://www.ellenmacarthurfoundation.org" target="_blank">ellenmacarthurfoundation.org</a></li>
-        </ul></li>
-
         </ul>
       </div>
     </section>
   </main>
 
   <footer>
-    Educazione civica · Inquinamento digitale e Intelligenza Artificiale
+    Progetto finale per l'Esame di Stato · Educazione civica · Inquinamento digitale e Intelligenza Artificiale
   </footer>
 
   <button id="backToTop" title="Torna all'inizio">↑</button>
@@ -1324,6 +1322,8 @@
     };
 
     const tooltip = document.createElement('div');
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.setAttribute('aria-hidden', 'true');
     tooltip.style.cssText = `
       position: fixed;
       background: rgba(19, 26, 46, 0.95);
@@ -1341,7 +1341,9 @@
       display: none;
       white-space: nowrap;
     `;
-    document.body.appendChild(tooltip);
+    if (document.body) {
+      document.body.appendChild(tooltip);
+    }
 
     function showTooltip(e, text) {
       tooltip.textContent = text;
@@ -1666,10 +1668,10 @@
 
     function calcolaImpatto() {
       const nome = document.getElementById('nome').value.trim();
-      const prompt = Number(document.getElementById('prompt').value || 0);
-      const immagini = Number(document.getElementById('immagini').value || 0);
-      const oreOnline = Number(document.getElementById('oreOnline').value || 0);
-      const dispositivi = Number(document.getElementById('dispositivi').value || 0);
+      const prompt = Math.max(0, Number(document.getElementById('prompt').value || 0));
+      const immagini = Math.max(0, Number(document.getElementById('immagini').value || 0));
+      const oreOnline = Math.max(0, Number(document.getElementById('oreOnline').value || 0));
+      const dispositivi = Math.max(0, Number(document.getElementById('dispositivi').value || 0));
 
       const co2Prompt = prompt * 365 * 3;
       const co2Immagini = immagini * 52 * 35;
@@ -1688,9 +1690,9 @@
     }
 
     function redrawAll() {
-      drawBarChart();
-      drawLineChart();
-      drawPieChart();
+      if (document.getElementById('barChart')) drawBarChart();
+      if (document.getElementById('lineChart')) drawLineChart();
+      if (document.getElementById('pieChart')) drawPieChart();
     }
 
     function animateChartOnIntersection(canvasId, duration = 1000) {
@@ -1744,7 +1746,8 @@
     });
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-links a');
-    window.addEventListener('scroll', () => {
+    let lastScrollTime = 0;
+    function updateActiveNav() {
       let current = '';
       sections.forEach(section => {
         if (window.scrollY >= section.offsetTop - 150) current = section.getAttribute('id');
@@ -1753,8 +1756,16 @@
         link.classList.remove('active');
         if (link.getAttribute('href') === '#' + current) link.classList.add('active');
       });
+    }
+    window.addEventListener('scroll', () => {
+      const now = Date.now();
+      if (now - lastScrollTime > 100) {
+        updateActiveNav();
+        lastScrollTime = now;
+      }
     });
     function animateCounter(element, target, suffix = '', duration = 800) {
+      const startValue = 0;
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -1767,7 +1778,6 @@
       };
       animate();
     }
-    const startValue = 0;
     const statValues = document.querySelectorAll('.stat .value');
     const statObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1784,9 +1794,14 @@
     }, { threshold: 0.5 });
     statValues.forEach(stat => statObserver.observe(stat));
     const backToTopBtn = document.getElementById('backToTop');
+    let lastScrollTopCheck = 0;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) backToTopBtn.classList.add('show');
-      else backToTopBtn.classList.remove('show');
+      const now = Date.now();
+      if (now - lastScrollTopCheck > 100) {
+        if (window.scrollY > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
+        lastScrollTopCheck = now;
+      }
     });
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     const formFields = document.querySelectorAll('.form-field');
@@ -1795,7 +1810,10 @@
       if (!input) return false;
       let isValid = true;
       if (input.type === 'text') isValid = input.value.trim() !== '';
-      else if (input.type === 'number') isValid = input.value.trim() !== '' && parseInt(input.value) >= 0;
+      else if (input.type === 'number') {
+        const val = input.value.trim();
+        isValid = val !== '' && !isNaN(parseInt(val)) && parseInt(val) >= 0;
+      }
       else if (input.tagName === 'SELECT') isValid = input.value !== '';
       if (!isValid) {
         field.classList.remove('valid');
@@ -1956,7 +1974,11 @@
       if (!found) hideTooltip();
     });
     document.getElementById('pieChart').addEventListener('mouseleave', hideTooltip);
-    window.addEventListener('resize', redrawAll);
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(redrawAll, 150);
+    });
     redrawAll();
     document.querySelectorAll('.btn-number').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1970,10 +1992,14 @@
     const parallaxBg = document.querySelector('.parallax-bg');
     const parallaxOrbs = document.querySelectorAll('.parallax-orb');
     if (parallaxBg && parallaxOrbs.length > 0) {
+      const parallaxState = {};
       window.addEventListener('scroll', () => {
         parallaxOrbs.forEach((orb, i) => {
           const speed = 0.3 + (i * 0.1);
-          orb.style.transform = `translateY(${window.scrollY * speed}px)`;
+          const scrollTranslate = window.scrollY * speed;
+          const mouseX = parallaxState.mouseX || 0;
+          const mouseY = parallaxState.mouseY || 0;
+          orb.style.transform = `translateY(${scrollTranslate}px) translate(${mouseX}px, ${mouseY}px)`;
         });
       });
       parallaxBg.addEventListener('mousemove', (e) => {
@@ -1983,8 +2009,19 @@
         parallaxOrbs.forEach((orb, i) => {
           const moveX = (x - rect.width / 2) * (0.02 + i * 0.01);
           const moveY = (y - rect.height / 2) * (0.02 + i * 0.01);
-          orb.style.transform += ` translate(${moveX}px, ${moveY}px)`;
+          parallaxState.mouseX = moveX;
+          parallaxState.mouseY = moveY;
+          const scrollTranslate = window.scrollY * (0.3 + i * 0.1);
+          orb.style.transform = `translateY(${scrollTranslate}px) translate(${moveX}px, ${moveY}px)`;
         });
+      });
+      parallaxBg.addEventListener('mouseleave', () => {
+        parallaxOrbs.forEach((orb, i) => {
+          const scrollTranslate = window.scrollY * (0.3 + i * 0.1);
+          orb.style.transform = `translateY(${scrollTranslate}px)`;
+        });
+        parallaxState.mouseX = 0;
+        parallaxState.mouseY = 0;
       });
     }
   </script>
